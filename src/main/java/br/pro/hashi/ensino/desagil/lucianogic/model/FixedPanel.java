@@ -20,4 +20,3 @@ public class FixedPanel extends JPanel {
 		return comp;
 	}
 }
-

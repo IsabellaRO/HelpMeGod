@@ -42,7 +42,7 @@ public class Main {
             	JFrame frame = new JFrame("Lucianogic");
 
             	// Coloca a tela principal na janela.
-         /*   	frame.setContentPane(mainView);*/
+            	frame.setContentPane(mainView);
 
             	// Configura a janela para encerrar o programa quando for fechada.
             	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
