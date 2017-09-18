@@ -1,5 +1,6 @@
 package br.pro.hashi.ensino.desagil.lucianogic.model;
 
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -23,23 +24,27 @@ public class MainView extends JPanel implements ActionListener {
 
 	// A componente JComboBox representa um menu.
 	// https://docs.oracle.com/javase/tutorial/uiswing/components/combobox.html
-	private JComboBox<Gate> comboBox;
+	private JComboBox<String> comboBox;
 
 	private GateView gateView;
-
+	private List<Gate> model;
+	
 
 	public MainView(List<Gate> model) {
-		comboBox = new JComboBox<>();
+		this.model = model;
+		comboBox = new JComboBox<String>();
 
 		for(Gate gate: model) {
-			comboBox.addItem(gate);
-		}
+
+			comboBox.addItem(gate.getName());
+			//comboBox.setText(gate.getName());
+			}
+		
 
 		// Esta linha garante que, sempre que o usuario selecionar
 		// um item do menu, o metodo actionPerformed abaixo sera chamado.
 		// Voce usou a interface ActionListener no Projeto 1, lembra?
 		comboBox.addActionListener(this);
-
 		// Esta linha garante que os componentes sejam simplesmente
 		// colocados em linha reta, mais especificamente na vertical.
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -47,7 +52,7 @@ public class MainView extends JPanel implements ActionListener {
 		add(comboBox);
 
 		// A descricao do metodo addCalculatorView esta logo abaixo.
-		addGateView(comboBox.getItemAt(0));
+		addGateView(model.get(0)); 
 	}
 
 
@@ -55,9 +60,10 @@ public class MainView extends JPanel implements ActionListener {
 	// calculadora e coloca essa interface abaixo do menu.
 	private void addGateView(Gate gate) {
 		gateView = new GateView(gate);
+		
 		add(gateView);
 	}
-
+		
 
 	/* A PARTIR DESTE PONTO VOCE DEVE ENTENDER SOZINHO */
 
@@ -67,7 +73,7 @@ public class MainView extends JPanel implements ActionListener {
 		remove(gateView);
 
 		int index = comboBox.getSelectedIndex();
-		Gate gate = comboBox.getItemAt(index);
+		Gate gate = model.get(index);
 		addGateView(gate);
 
 		// Necessario para atualizar a janela.

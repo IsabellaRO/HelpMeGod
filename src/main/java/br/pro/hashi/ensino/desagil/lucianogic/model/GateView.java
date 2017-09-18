@@ -1,6 +1,7 @@
 package br.pro.hashi.ensino.desagil.lucianogic.model;
 
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -41,15 +42,17 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 	private Switch a1;
 	private Switch a2;
 	private Switch a3;
-
+	
 
 	public GateView(Gate gate) {
 		super(270, 150);
 
+		
 		this.gate = gate;
+		image = loadImage(gate.getName());
 		JLabel label1 = new JLabel("In1:");
 		JLabel label2 = new JLabel("in2:");
-		JLabel label3 = new JLabel("in3:");
+		JLabel label3 = new JLabel("select:");
 		JLabel resultLabel = new JLabel("Result: ");
 		in1 = new JCheckBox();
 		in2 = new JCheckBox();
@@ -70,18 +73,18 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 		// A componente JLabel representa simplesmente um texto fixo.
 		// https://docs.oracle.com/javase/tutorial/uiswing/components/label.html		
 		if(gate.getIn() == 1) {
-			add(label1,10,10,50,25);
-			add(in1,  10,  30, 50, 25);
+			add(label1,25, 40, 25,25);
+			add(in1,  25,  60, 25, 25);
 			gate.connect(a1, 0);
 
 			
 		}
 		
 		else if(gate.getIn() == 2) {
-			add(label1,10,10,50,25);
-			add(label2,10,50,50,25);
-			add(in1,  10,  30, 50, 25);
-			add(in2,  10,  70, 50, 25);
+			add(label1, 30, 25, 25, 20);
+			add(label2, 30, 65, 25, 20);
+			add(in1,  30,  40, 25, 20);
+			add(in2,  30,  80, 25, 20);
 			gate.connect(a1, 0);
 			gate.connect(a2, 1);
 
@@ -89,12 +92,12 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 		}
 		
 		else{
-			add(label1,10, 10, 50, 25);
-			add(label2,10, 50, 50, 25);
-			add(label3,10, 90, 50, 25);
-			add(in1,   10,  30, 50, 25);
-			add(in2,   10,  70, 50, 25);
-			add(in3,   10,  110, 50, 25);
+			add(label1, 30, 25, 25, 20);
+			add(label2, 30, 65, 25, 20);
+			add(label3, 10, 100, 50, 20);
+			add(in1,  30,  40, 25, 20);
+			add(in2,  30,  80, 25, 20);
+			add(in3,  30,  115, 25, 20);
 			gate.connect(a1, 0);
 			gate.connect(a2, 1);
 			gate.connect(a3, 2);
@@ -111,18 +114,7 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 		// Voce usou a interface KeyListener no Projeto 1, lembra?
 
 		// Esta linha garante que resultField nao seja digitavel.
-		resultField.setEnabled(false);
-		
-		add(resultField, 100, 50, 50, 25);
-		add(resultLabel,100,30,50,25);
-
-		resultField.setSelected(gate.read());
-		
-		
-		
-		
-		
-	}
+		}
 
 
 	// Necessario para carregar os arquivos de imagem.
@@ -133,18 +125,29 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 	//}
 
 
+	private Image loadImage(String name) {
+		URL url = getClass().getResource("/img/" + name + ".png");
+		ImageIcon icon = new ImageIcon(url);
+		return icon.getImage();
+	}
+
+
 	@Override
 	public void paintComponent(Graphics g) {
-		g.drawImage(image, 310, 10, 50, 50, null);
-
+		g.drawImage(image, 60, 28, 130, 130, null);
+		
+		if(gate.read()){
+			g.setColor(Color.RED);
+			g.fillOval(195, 45, 30, 50);
+		}
+		else {
+			g.setColor(Color.GRAY);
+			g.fillOval(195, 45, 30, 50);
+			}
 		// Evita bugs visuais em alguns sistemas operacionais.
 		getToolkit().sync();
     }
-
-
-
-
-
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
@@ -154,7 +157,6 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 
 	@Override
 	public void itemStateChanged(ItemEvent arg0) {
-		// TODO Auto-generated method stub
 		try {
 			if (gate.getIn() == 1) {
 				if (in1.isSelected()) {
@@ -207,6 +209,7 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 			
 			
 		}
+		
 		finally {
 			resultField.setSelected(gate.read());
 		}
