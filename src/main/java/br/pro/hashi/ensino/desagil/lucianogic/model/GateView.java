@@ -8,18 +8,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 
 
 
 // Esta classe representa a interface de uma calculadora de densidade, com
 // os dois campos de entrada (peso e raio) e o campo de saida (resultado).
-public class GateView<resultField> extends FixedPanel implements ActionListener, ItemListener {
+public class GateView<resultField> extends FixedPanel implements ActionListener, ItemListener, MouseListener {
 
 	// Necessario para serializar objetos desta classe.
 	private static final long serialVersionUID = 1L;
@@ -41,11 +43,12 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 	private Switch a1;
 	private Switch a2;
 	private Switch a3;
-	
+	private Color color;
+	private LED led;
 
 	public GateView(Gate gate) {
 		super(270, 150);
-
+		Color color = new Color(0, 0, 0);
 		
 		this.gate = gate;
 		image = loadImage(gate.getName());
@@ -53,6 +56,8 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 		JLabel label2 = new JLabel("in2:");
 		JLabel label3 = new JLabel("select:");
 		JLabel resultLabel = new JLabel("Result: ");
+		addMouseListener(this);
+		
 		in1 = new JCheckBox();
 		in2 = new JCheckBox();
 		in3 = new JCheckBox();
@@ -64,12 +69,19 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 		in1.addItemListener(this);
 		in2.addItemListener(this);
 		in3.addItemListener(this);
-		resultField.addItemListener(this);
 	
 
 		a1.setOn(false);
 		a2.setOn(false);
 		a3.setOn(false);
+		
+		
+		int r = color.getRed();
+		int g = color.getGreen();
+		int b = color.getBlue();
+		led = new LED(r, g, b);
+		
+		
 		// A componente JLabel representa simplesmente um texto fixo.
 		// https://docs.oracle.com/javase/tutorial/uiswing/components/label.html		
 		if(gate.getIn() == 1) {
@@ -139,7 +151,8 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 		
 		
 		if(gate.read()){
-			g.setColor(Color.RED);
+			color = new Color(led.getR(), led.getG(), led.getB());
+			g.setColor(color);
 			g.fillOval(195, 45, 30, 50);
 			g.fillRect(192, 80, 38, 15);
 			
@@ -153,6 +166,25 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 		// Evita bugs visuais em alguns sistemas operacionais.
 		getToolkit().sync();
     }
+	
+	public void mouseClicked(MouseEvent e) {
+	   int x = e.getX();
+	   int y = e.getY();
+		
+		if (x >= 195 && x <= 225 && y >= 45 && y <= 80){
+			color = JColorChooser.showDialog(this, null, null);
+
+			int r = color.getRed();
+			int g = color.getGreen();
+			int b = color.getBlue();
+			led = new LED(r, g, b);
+			led.connect(gate, 0);
+			repaint();
+			getToolkit().sync();
+			
+		}
+
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -217,8 +249,36 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 		}
 		
 		finally {
-			resultField.setSelected(gate.read());
+			led.connect(gate, 0);
 		}
+		
+	}
+
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 
