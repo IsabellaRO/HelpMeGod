@@ -8,8 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -65,6 +64,7 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 		in1.addItemListener(this);
 		in2.addItemListener(this);
 		in3.addItemListener(this);
+		resultField.addItemListener(this);
 	
 
 		a1.setOn(false);
@@ -134,16 +134,22 @@ public class GateView<resultField> extends FixedPanel implements ActionListener,
 
 	@Override
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		g.drawImage(image, 60, 28, 130, 130, null);
+		
 		
 		if(gate.read()){
 			g.setColor(Color.RED);
 			g.fillOval(195, 45, 30, 50);
+			g.fillRect(192, 80, 38, 15);
+			
 		}
 		else {
 			g.setColor(Color.GRAY);
 			g.fillOval(195, 45, 30, 50);
-			}
+			g.fillRect(192, 80, 38, 15);
+		}
+		repaint();
 		// Evita bugs visuais em alguns sistemas operacionais.
 		getToolkit().sync();
     }
